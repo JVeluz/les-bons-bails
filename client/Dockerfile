@@ -7,11 +7,11 @@ RUN cd shared && npm install
 COPY shared/ ./shared/
 RUN cd shared && npm run build --if-present
 
-WORKDIR /app/front-end
-COPY front-end/package*.json ./
+WORKDIR /app/client
+COPY client/package*.json ./
 RUN npm install
 
-COPY front-end/ ./
+COPY client/ ./
 
 ARG API_URL
 ENV API_URL=$API_URL
@@ -21,7 +21,7 @@ RUN npm run build
 
 FROM nginx:alpine
 
-COPY --from=builder /app/front-end/public /usr/share/nginx/html
+COPY --from=builder /app/client/public /usr/share/nginx/html
 
 RUN echo 'server { \
     listen 80; \
