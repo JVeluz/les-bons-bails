@@ -1,23 +1,30 @@
 {
     "scripts": {
-        "start": "node build/index.js",
-        "build": "tsc -b",
-        "dev": "node --watch --env-file=.env build/index.js",
-        "test": "node --env-file=.env build/test.js"
+        "start": "npm run db:push && npm run db:seed && tsx src/index.ts",
+        "dev": "tsx watch --env-file=.env src/index.ts",
+        "test": "tsx --env-file=.env src/test.ts",
+        "db:push": "drizzle-kit push --force",
+        "db:seed": "tsx src/database/seed.ts",
+        "db:studio": "drizzle-kit studio"
     },
     "devDependencies": {
         "@types/bcryptjs": "^2.4.6",
         "@types/cors": "^2.8.19",
         "@types/express": "^5.0.5",
         "@types/jsonwebtoken": "^9.0.10",
-        "mongoose": "^8.19.2",
-        "ts-loader": "^9.5.4"
+        "@types/pg": "^8.23.1",
+        "drizzle-kit": "^1.0.0-rc.4",
+        "ts-loader": "^9.5.4",
+        "tsx": "^4.23.15"
     },
     "dependencies": {
-        "express": "^5.1.0",
-        "cors": "^2.8.5",
         "bcryptjs": "^3.0.2",
+        "cors": "^2.8.5",
+        "dotenv": "^18.0.4",
+        "drizzle-orm": "^1.0.0-rc.4",
+        "express": "^5.1.0",
         "jsonwebtoken": "^9.0.2",
+        "pg": "^8.23.0",
         "shared": "file:../shared"
     }
 }

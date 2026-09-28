@@ -1,7 +1,7 @@
+// src/services/UserService.ts
 import { IUser } from "shared";
-import UserRepository from "../repositories/UserRepository";
+import UserRepository, { IUserDocument } from "../repositories/UserRepository";
 import jwt from "jsonwebtoken";
-import { IUserDocument } from "../models/User";
 
 export default class UserService {
 
@@ -52,14 +52,11 @@ export default class UserService {
     }
 
     public async update(id: string, data: Partial<IUser>): Promise<any> {
-        const user = await this.userRepository.findById(id);
-        if (!user)
+        const updatedUser = await this.userRepository.update(id, data);
+        if (!updatedUser)
             throw new Error("User not found");
 
-        Object.assign(user, data);
-        await this.userRepository.update(id, user);
-
-        return this.sanitizeUser(user)
+        return this.sanitizeUser(updatedUser);
     }
 
     private generateToken(user: IUserDocument): string {
@@ -69,8 +66,7 @@ export default class UserService {
     }
 
     private sanitizeUser(user: IUserDocument): Partial<IUser> {
-        const userObj = (user as any).toObject();
-        delete userObj.password;
-        return userObj;
+        const { password, comparePassword, ...cleanUser } = user as any;
+        return cleanUser;
     }
 }

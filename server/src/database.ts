@@ -1,14 +1,13 @@
-import mongoose from "mongoose";
+import { config } from "dotenv";
+import { drizzle } from "drizzle-orm/node-postgres";
+import { relations } from "./database/schema";
 
-export default async function connectDB() {
-    try {
-        await mongoose.connect(process.env.MONGODB_URI!, {
-            serverApi: { version: "1", strict: true, deprecationErrors: true }
-        });
-        await mongoose.connection.db?.admin().command({ ping: 1 });
-        console.log("✅ Successfully connected to MongoDB!");
-    } catch (error) {
-        console.error("❌ Could not connect to MongoDB", error);
-        process.exit(1);
-    }
+config()
+
+if (!process.env.DATABASE_URL) {
+    throw new Error("❌ La variable DATABASE_URL est manquante dans le fichier .env !");
 }
+
+export const database = drizzle(process.env.DATABASE_URL!, { relations });
+
+export type Database = typeof database;

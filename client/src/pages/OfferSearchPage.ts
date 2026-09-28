@@ -13,7 +13,7 @@ export default class OfferSearchPage extends HTMLElement {
     private searchForm!: HTMLFormElement;
     private filterForm!: HTMLFormElement;
 
-    public connectedCallback(): void {
+    public async connectedCallback() {
         this.innerHTML = HTML;
 
         this.offerContainer = this.querySelector(".offer-container")!;
@@ -26,6 +26,8 @@ export default class OfferSearchPage extends HTMLElement {
         if (this.filterForm) {
             this.filterForm.onsubmit = (event) => this.onSearchSubmit(event);
         }
+
+        this.update(await this.offerService.getAll());
     }
 
     @WithLoading()
