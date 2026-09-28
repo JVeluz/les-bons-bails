@@ -2,6 +2,8 @@ FROM node:22-alpine
 
 WORKDIR /app
 
+COPY tsconfig*.json ./
+
 RUN npm install -g typescript
 
 COPY shared/package*.json ./shared/
